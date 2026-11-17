@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나를 디자인하다 - 캔바 프레젠테이션 교재</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Pretendard', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            900: '#1e3a8a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Pretendard Font -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Pretendard', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #475569;
+        }
+        .nav-active {
+            background-color: #3b82f6;
+            color: white !important;
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.5);
+        }
+        .dark .nav-active {
+            background-color: #2563eb;
+        }
+        /* Fade in animation for sections */
+        .fade-in {
+            animation: fadeIn 0.4s ease-in-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-200 antialiased flex flex-col h-screen overflow-hidden">
+
+    <!-- Header -->
+    <header class="bg-white dark:bg-gray-800 shadow-sm z-20 flex-shrink-0 border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo & Title -->
+                <div class="flex items-center gap-3">
+                    <div class="bg-brand-500 text-white p-2 rounded-lg">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-900 dark:text-white leading-tight">나를 디자인하다</h1>
+                        <p class="text-xs text-brand-600 dark:text-brand-100 font-medium">나만의 브랜드 PPT 만들기 가이드</p>
+                    </div>
+                </div>
+
+                <!-- Developer & Controls -->
+                <div class="flex items-center gap-6">
+                    <div class="hidden md:block text-right">
+                        <p class="text-xs text-gray-500 dark:text-gray-400">개발자</p>
+                        <p class="text-sm font-semibold text-gray-700 dark:text-gray-300">가치있는 미래교육 연구소 대표 <span class="text-brand-600 dark:text-brand-500">김병찬</span></p>
+                    </div>
+                    
+                    <!-- Theme Toggle -->
+                    <button id="theme-toggle" class="p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        <i id="theme-toggle-dark-icon" class="fa-solid fa-moon hidden"></i>
+                        <i id="theme-toggle-light-icon" class="fa-solid fa-sun hidden"></i>
+                    </button>
+
+                    <!-- Mobile Menu Button -->
+                    <button id="mobile-menu-btn" class="md:hidden p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white focus:outline-none">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Layout -->
+    <div class="flex flex-1 overflow-hidden">
+        
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 hidden md:flex flex-col flex-shrink-0 transition-transform duration-300 ease-in-out absolute md:relative z-10 h-full transform -translate-x-full md:translate-x-0">
+            <nav class="flex-1 px-4 py-6 space-y-3 overflow-y-auto" id="nav-menu">
+                <button data-target="overview" class="w-full nav-link flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all nav-active text-left">
+                    <i class="fa-solid fa-flag w-5 text-center"></i> 프로젝트 소개
+                </button>
+                <button data-target="step1" class="w-full nav-link flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all text-left">
+                    <i class="fa-solid fa-1 w-5 text-center"></i> 1단계: 캔바 시작하기
+                </button>
+                <button data-target="step2" class="w-full nav-link flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all text-left">
+                    <i class="fa-solid fa-2 w-5 text-center"></i> 2단계: 나를 분석하기
+                </button>
+                <button data-target="step3" class="w-full nav-link flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all text-left">
+                    <i class="fa-solid fa-3 w-5 text-center"></i> 3단계: 미래 그리기
+                </button>
+                <button data-target="tips" class="w-full nav-link flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all text-left">
+                    <i class="fa-solid fa-lightbulb w-5 text-center text-yellow-500"></i> 디자인 꿀팁 방출
+                </button>
+            </nav>
+            <div class="p-4 border-t border-gray-200 dark:border-gray-700 md:hidden bg-gray-50 dark:bg-gray-800">
+                <p class="text-xs text-gray-500 dark:text-gray-400">개발자</p>
+                <p class="text-sm font-semibold text-gray-700 dark:text-gray-300">가치있는 미래교육 연구소<br>대표 김병찬</p>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900 p-4 md:p-8 lg:px-12 relative" id="main-content">
+            
+            <div class="max-w-4xl mx-auto pb-20">
+                
+                <!-- Section: Overview -->
+                <section id="overview" class="content-section block fade-in">
+                    <div class="mb-8 bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-gray-700">
+                        <div class="inline-block bg-brand-100 dark:bg-brand-900/40 text-brand-600 dark:text-brand-400 font-bold px-3 py-1 rounded-full text-sm mb-4">
+                            고등학교 1학년 진로 디자인 프로젝트
+                        </div>
+                        <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4 leading-tight">
+                            "나라는 브랜드를<br>세상에 멋지게 소개해보세요!"
+                        </h2>
+                        <p class="text-gray-600 dark:text-gray-300 mb-6 text-lg leading-relaxed">
+                            우리가 정성껏 작성한 '나 브랜딩 활동지'의 내용을 캔바(Canva)를 활용해 하나의 멋진 스토리로 만들어볼 시간입니다. 나만의 특징, 장점, 그리고 미래의 비전을 담아 세상에 단 하나뿐인 프레젠테이션을 완성해 봅시다.
+                        </p>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
+                            <div class="bg-blue-50 dark:bg-blue-900/20 p-5 rounded-xl border border-blue-100 dark:border-blue-800/30">
+                                <h3 class="font-bold text-blue-800 dark:text-blue-300 mb-2 flex items-center gap-2">
+                                    <i class="fa-solid fa-bullseye"></i> 오늘의 미션
+                                </h3>
+                                <p class="text-sm text-blue-700 dark:text-blue-400">총 7장의 슬라이드로 구성된 나만의 포트폴리오 PPT 제작하기</p>
+                            </div>
+                            <div class="bg-green-50 dark:bg-green-900/20 p-5 rounded-xl border border-green-100 dark:border-green-800/30">
+                                <h3 class="font-bold text-green-800 dark:text-green-300 mb-2 flex items-center gap-2">
+                                    <i class="fa-solid fa-rocket"></i> 기대 효과
+                                </h3>
+                                <p class="text-sm text-green-700 dark:text-green-400">고등학교 3년의 목표를 명확히 하고 나를 표현하는 시각적 소통 능력 기르기</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-10">
+                        <button onclick="document.querySelector('[data-target=\'step1\']').click()" class="bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-transform transform hover:scale-105">
+                            프로젝트 시작하기 <i class="fa-solid fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Section: Step 1 -->
+                <section id="step1" class="content-section hidden">
+                    <div class="mb-6">
+                        <span class="text-brand-500 font-bold tracking-wider text-sm mb-1 block">STEP 1</span>
+                        <h2 class="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                            <i class="fa-solid fa-right-to-bracket text-gray-400"></i> 캔바 시작 & 템플릿 선정
+                        </h2>
+                    </div>
+
+                    <div class="space-y-6">
+                        <!-- Step 1-1 -->
+                        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col md:flex-row gap-6 items-start">
+                            <div class="w-12 h-12 flex-shrink-0 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center font-bold text-xl text-gray-500 dark:text-gray-400">1</div>
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">캔바 로그인하기</h3>
+                                <p class="text-gray-600 dark:text-gray-400 mb-4">인터넷 브라우저를 열고 캔바(Canva.com)에 접속하여 로그인합니다. (학교/교육용 계정을 사용하면 모든 프리미엄 기능을 무료로 쓸 수 있습니다.)</p>
+                                <a href="https://www.canva.com/" target="_blank" class="inline-flex items-center text-brand-600 dark:text-brand-400 font-medium hover:underline">
+                                    캔바 바로가기 <i class="fa-solid fa-external-link-alt ml-1 text-sm"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Step 1-2 -->
+                        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col md:flex-row gap-6 items-start">
+                            <div class="w-12 h-12 flex-shrink-0 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center font-bold text-xl text-gray-500 dark:text-gray-400">2</div>
+                            <div class="w-full">
+                                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">나에게 맞는 템플릿 찾기</h3>
+                                <p class="text-gray-600 dark:text-gray-400 mb-4">메인 화면 검색창에 아래의 추천 검색어를 입력하고 '프레젠테이션(16:9)' 규격의 디자인을 선택하세요.</p>
+                                <div class="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg flex flex-wrap gap-2">
+                                    <span class="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 px-3 py-1 rounded text-sm text-gray-700 dark:text-gray-300">#자기소개서</span>
+                                    <span class="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 px-3 py-1 rounded text-sm text-gray-700 dark:text-gray-300">#포트폴리오</span>
+                                    <span class="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 px-3 py-1 rounded text-sm text-gray-700 dark:text-gray-300">#퍼스널브랜딩</span>
+                                    <span class="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 px-3 py-1 rounded text-sm text-gray-700 dark:text-gray-300">#깔끔한 PPT</span>
+                                </div>
+                                <div class="mt-4 p-3 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 text-sm rounded-lg border border-red-100 dark:border-red-800/30 flex items-start gap-2">
+                                    <i class="fa-solid fa-triangle-exclamation mt-0.5"></i>
+                                    <p><strong>주의:</strong> 배경이 너무 화려하거나 글씨가 안 보이는 디자인은 피해주세요! 심플한 디자인이 내 이야기를 돋보이게 합니다.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section: Step 2 -->
+                <section id="step2" class="content-section hidden">
+                    <div class="mb-6">
+                        <span class="text-brand-500 font-bold tracking-wider text-sm mb-1 block">STEP 2</span>
+                        <h2 class="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                            <i class="fa-solid fa-user-check text-gray-400"></i> 나를 분석하기 (슬라이드 1~3)
+                        </h2>
+                        <p class="text-gray-600 dark:text-gray-400 mt-2">작성한 활동지의 1번 파트 '나 분석하기' 내용을 바탕으로 슬라이드를 채워봅니다.</p>
+                    </div>
+
+                    <div class="space-y-6">
+                        <!-- Slide 1 -->
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-l-4 border-l-blue-500 border-gray-100 dark:border-gray-700 overflow-hidden">
+                            <div class="bg-gray-50 dark:bg-gray-700/50 px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
+                                <h3 class="text-lg font-bold text-gray-900 dark:text-white">슬라이드 1: 표지</h3>
+                                <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">나의 첫인상</span>
+                            </div>
+                            <div class="p-6">
+                                <ul class="space-y-3 text-gray-600 dark:text-gray-300">
+                                    <li class="flex items-start gap-2">
+                                        <i class="fa-solid fa-check text-brand-500 mt-1"></i>
+                                        <div><strong>나의 좌우명:</strong> 활동지에 쓴 좌우명이나 가치관을 가장 큰 제목으로 배치하세요. (예: "실패를 두려워하지 않는 도전자")</div>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <i class="fa-solid fa-check text-brand-500 mt-1"></i>
+                                        <div><strong>이름 및 소속:</strong> 하단에 'OO고등학교 1학년 O반 OOO'을 깔끔하게 적어줍니다.</div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Slide 2 -->
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-l-4 border-l-purple-500 border-gray-100 dark:border-gray-700 overflow-hidden">
+                            <div class="bg-gray-50 dark:bg-gray-700/50 px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
+                                <h3 class="text-lg font-bold text-gray-900 dark:text-white">슬라이드 2: 나 분석하기</h3>
+                                <span class="bg-purple-100 text-purple-800 text-xs font-semibold px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300">나의 현재</span>
+                            </div>
+                            <div class="p-6">
+                                <ul class="space-y-3 text-gray-600 dark:text-gray-300">
+                                    <li class="flex items-start gap-2">
+                                        <i class="fa-solid fa-check text-brand-500 mt-1"></i>
+                                        <div><strong>성격 및 흥미:</strong> 나의 MBTI와 좋아하는 것, 잘하는 것을 키워드로 작성합니다.</div>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <i class="fa-solid fa-check text-brand-500 mt-1"></i>
+                                        <div><strong>SWOT 분석 요약:</strong> 활동지에 적은 S(강점), W(약점), O(기회), T(위협) 중 핵심적인 내용만 뽑아 4분할 형태로 예쁘게 배치해보세요.</div>
+                                    </li>
+                                </ul>
+                                <div class="mt-4 p-3 bg-gray-50 dark:bg-gray-900 rounded-lg text-sm border border-gray-200 dark:border-gray-700">
+                                    💡 <strong>작업 팁:</strong> 줄글을 그대로 복사해서 붙여넣지 마세요! 긴 문장은 단어나 짧은 문구로 요약해야 프레젠테이션이 멋져 보입니다.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Slide 3 -->
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-l-4 border-l-green-500 border-gray-100 dark:border-gray-700 overflow-hidden">
+                            <div class="bg-gray-50 dark:bg-gray-700/50 px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
+                                <h3 class="text-lg font-bold text-gray-900 dark:text-white">슬라이드 3: 나의 가치관</h3>
+                                <span class="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">나의 내면</span>
+                            </div>
+                            <div class="p-6">
+                                <ul class="space-y-3 text-gray-600 dark:text-gray-300">
+                                    <li class="flex items-start gap-2">
+                                        <i class="fa-solid fa-check text-brand-500 mt-1"></i>
+                                        <div><strong>롤모델:</strong> 롤모델의 이름과 선정 이유(배우고 싶은 점)를 적습니다. 인물의 사진이나 관련 아이콘을 넣으면 좋습니다.</div>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <i class="fa-solid fa-check text-brand-500 mt-1"></i>
+                                        <div><strong>책과 경험:</strong> 나에게 영향을 준 책 1권과 의미 있었던 경험을 나란히 배치하여 나의 가치관이 어떻게 형성되었는지 보여줍니다.</div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section: Step 3 -->
+                <section id="step3" class="content-section hidden">
+                    <div class="mb-6">
+                        <span class="text-brand-500 font-bold tracking-wider text-sm mb-1 block">STEP 3</span>
+                        <h2 class="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                            <i class="fa-solid fa-route text-gray-400"></i> 미래 설계하기 (슬라이드 4~7)
+                        </h2>
+                        <p class="text-gray-600 dark:text-gray-400 mt-2">활동지의 2번(나의 꿈)과 3번(고교 3개년 설계) 파트를 시각화하는 단계입니다.</p>
+                    </div>
+
+                    <div class="space-y-6">
+                        <!-- Slide 4 & 5 -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-t-4 border-t-orange-500 border-gray-100 dark:border-gray-700 p-6">
+                                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">슬라이드 4: 꿈과 비전</h3>
+                                <ul class="space-y-3 text-gray-600 dark:text-gray-300 text-sm">
+                                    <li><strong>희망 진로:</strong> 나의 꿈과 그 직업을 선택한 동기를 작성합니다.</li>
+                                    <li><strong>필요 역량:</strong> 해당 직업을 위해 필요한 지식(Knowledge), 태도(Attitude), 기술(Skill)을 3가지 박스 형태로 정리해보세요.</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-t-4 border-t-rose-500 border-gray-100 dark:border-gray-700 p-6">
+                                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">슬라이드 5: 직업 사명서</h3>
+                                <ul class="space-y-3 text-gray-600 dark:text-gray-300 text-sm">
+                                    <li>활동지 뒷장에 작성한 <strong>직업 사명서</strong> 문장을 크게 배치합니다.</li>
+                                    <li>따옴표( " " ) 아이콘을 양옆에 크게 배치하면 선언문 느낌을 강조할 수 있습니다.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Slide 6 -->
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden relative">
+                            <div class="absolute top-0 right-0 p-4 opacity-10">
+                                <i class="fa-solid fa-calendar-days text-6xl text-brand-500"></i>
+                            </div>
+                            <div class="p-6 relative z-10">
+                                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">슬라이드 6: 고등학교 3개년 설계</h3>
+                                <p class="text-gray-600 dark:text-gray-300 mb-4">1학년부터 3학년까지 나의 구체적인 로드맵을 보여주는 매우 중요한 슬라이드입니다.</p>
+                                
+                                <div class="bg-brand-50 dark:bg-gray-900 p-4 rounded-xl border border-brand-100 dark:border-gray-700">
+                                    <h4 class="font-bold text-brand-700 dark:text-brand-400 mb-2">디자인 추천 방식</h4>
+                                    <ul class="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                                        <li>👉 <strong>타임라인 활용:</strong> 캔바 검색창(요소)에서 '타임라인(Timeline)'이나 '단계 화살표'를 검색하여 학년별로 흐름이 이어지게 만드세요.</li>
+                                        <li>👉 학급 임원, 동아리 활동, 목표 자격증, 성적 목표 등 활동지에 적은 핵심 계획들을 배치합니다.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Slide 7 -->
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">슬라이드 7: 마무리 및 버킷리스트</h3>
+                            <ul class="space-y-3 text-gray-600 dark:text-gray-300">
+                                <li>나의 인생 버킷리스트 6가지를 체크박스 형태나 목록으로 깔끔하게 정리합니다.</li>
+                                <li>마지막 인사말("감사합니다", "질문 있으신가요?")을 추가하여 발표의 마무리를 준비합니다.</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- Section: Tips -->
+                <section id="tips" class="content-section hidden">
+                    <div class="mb-6">
+                        <h2 class="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                            <i class="fa-solid fa-wand-magic-sparkles text-yellow-500"></i> 완성도를 높이는 디자인 꿀팁
+                        </h2>
+                        <p class="text-gray-600 dark:text-gray-400 mt-2">조금 더 전문가처럼 보이는 프레젠테이션 제작 노하우입니다.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        
+                        <!-- Tip 1 -->
+                        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                            <div class="text-3xl text-brand-500 mb-3"><i class="fa-brands fa-searchengin"></i></div>
+                            <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-2">똑똑하게 아이콘 검색하기</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                                '요소' 탭에서 검색할 때 단어 뒤에 <strong>icon</strong>이나 <strong>3D</strong>를 붙여보세요.<br>
+                                예) <code class="bg-gray-100 dark:bg-gray-700 px-1 py-0.5 rounded text-red-500">농업 icon</code> 또는 <code class="bg-gray-100 dark:bg-gray-700 px-1 py-0.5 rounded text-red-500">컴퓨터 3D</code><br>
+                                그래픽 스타일이 통일된 아이콘들을 모아 쓰면 훨씬 깔끔합니다.
+                            </p>
+                        </div>
+
+                        <!-- Tip 2 -->
+                        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                            <div class="text-3xl text-brand-500 mb-3"><i class="fa-solid fa-keyboard"></i></div>
+                            <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-2">마법의 단축키 3가지</h3>
+                            <ul class="text-sm text-gray-600 dark:text-gray-400 space-y-2">
+                                <li><kbd class="bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 px-2 py-1 rounded shadow-sm">T</kbd> : 텍스트(글 상자) 바로 추가</li>
+                                <li><kbd class="bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 px-2 py-1 rounded shadow-sm">C</kbd> : 동그라미(원) 도형 추가</li>
+                                <li><kbd class="bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 px-2 py-1 rounded shadow-sm">R</kbd> : 네모(사각형) 도형 추가</li>
+                            </ul>
+                        </div>
+
+                        <!-- Tip 3 -->
+                        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 md:col-span-2 flex flex-col sm:flex-row items-center gap-6">
+                            <div class="text-5xl text-brand-500"><i class="fa-solid fa-palette"></i></div>
+                            <div>
+                                <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-2">색상은 3가지만! (컬러 룰)</h3>
+                                <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                                    슬라이드에 색상이 너무 많으면 촌스러워집니다. <strong>배경색(흰색/밝은회색), 기본 글씨색(검정/진한회색), 그리고 포인트를 줄 메인 컬러(예: 파란색)</strong> 딱 3가지만 주로 사용해 보세요. 중요한 단어에만 메인 컬러로 포인트를 주면 가독성이 확 올라갑니다.
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <footer class="pt-10 mt-10 border-t border-gray-200 dark:border-gray-800 text-center text-sm text-gray-500 dark:text-gray-400">
+                    <p>© 2026 가치있는 미래교육 연구소. All rights reserved.</p>
+                    <p class="mt-1">Developed by 김병찬</p>
+                </footer>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Dark Mode Logic
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const darkIcon = document.getElementById('theme-toggle-dark-icon');
+        const lightIcon = document.getElementById('theme-toggle-light-icon');
+
+        // Check theme
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            lightIcon.classList.remove('hidden');
+            document.documentElement.classList.add('dark');
+        } else {
+            darkIcon.classList.remove('hidden');
+            document.documentElement.classList.remove('dark');
+        }
+
+        themeToggleBtn.addEventListener('click', function() {
+            darkIcon.classList.toggle('hidden');
+            lightIcon.classList.toggle('hidden');
+
+            if (localStorage.getItem('color-theme')) {
+                if (localStorage.getItem('color-theme') === 'light') {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('color-theme', 'dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('color-theme', 'light');
+                }
+            } else {
+                if (document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('color-theme', 'light');
+                } else {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('color-theme', 'dark');
+                }
+            }
+        });
+
+        // Mobile Menu Logic
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const sidebar = document.getElementById('sidebar');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('hidden');
+            if(!sidebar.classList.contains('hidden')) {
+                sidebar.classList.remove('-translate-x-full');
+                sidebar.classList.add('translate-x-0', 'w-full', 'md:w-64');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                sidebar.classList.remove('translate-x-0', 'w-full');
+            }
+        });
+
+        // Tab Navigation Logic
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('.content-section');
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Get target section id
+                const targetId = this.getAttribute('data-target');
+                
+                // Remove active class from all links
+                navLinks.forEach(nav => nav.classList.remove('nav-active'));
+                
+                // Add active class to clicked link
+                this.classList.add('nav-active');
+                
+                // Hide all sections and show target section with animation
+                sections.forEach(section => {
+                    if (section.id === targetId) {
+                        section.classList.remove('hidden');
+                        section.classList.add('block');
+                        
+                        // Re-trigger animation
+                        section.classList.remove('fade-in');
+                        void section.offsetWidth; // trigger reflow
+                        section.classList.add('fade-in');
+                    } else {
+                        section.classList.remove('block', 'fade-in');
+                        section.classList.add('hidden');
+                    }
+                });
+
+                // Scroll top main area
+                document.getElementById('main-content').scrollTop = 0;
+
+                // Close mobile sidebar if open
+                if(window.innerWidth < 768) {
+                    sidebar.classList.add('hidden', '-translate-x-full');
+                    sidebar.classList.remove('translate-x-0', 'w-full');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
